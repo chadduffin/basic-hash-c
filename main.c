@@ -14,17 +14,17 @@ int main(int argc, char **argv) {
   printf("hash_string(\"hello\", 5): %i.\n", hash_string("hello", 5));
   printf("hash_string(\"bye\", 3): %i.\n", hash_string("bye", 3));
 
-  printf("hash_integer(124124): %i.\n", hash_integer(124124));
+  printf("hash_integer(124124): %i.\n", hash_integer(-124124));
   printf("hash_integer(594392): %i.\n", hash_integer(594392));
   printf("hash_integer(231837): %i.\n", hash_integer(231837));
 
-  printf("hash_sequence(124124, 594392, 231837): %i.\n", hash_sequence(3, 124124, 594392, 231837));
+  printf("hash_sequence(124124, 594392, 231837): %i.\n", hash_sequence(3, -124124, 594392, 231837));
 
   return 0;
 }
 
 int hash_integer(int integer) {
-  return (integer % M);
+  return ((integer & 0x7FFFFFFF) % M);
 }
 
 int hash_sequence(int count, ...) {
@@ -34,7 +34,7 @@ int hash_sequence(int count, ...) {
   va_start(list, count);
 
   for (int i = 0; i < count; i++) {
-    hash = (R * hash + va_arg(list, int)) % M;
+    hash = ((R * hash) + (va_arg(list, int) & 0x7FFFFFFF)) % M;
   }
 
   va_end(list);
